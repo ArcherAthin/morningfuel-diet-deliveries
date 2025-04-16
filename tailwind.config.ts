@@ -61,7 +61,16 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+        // MorningFuel custom colors
+        brand: {
+          green: '#F2FCE2',
+          yellow: '#FEF7CD',
+          orange: '#F97316',
+          gray: '#F1F0FB',
+          charcoal: '#403E43',
+          darkCharcoal: '#221F26'
+        }
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -89,7 +98,11 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+			},
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        heading: ['Poppins', 'sans-serif']
+      }
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
