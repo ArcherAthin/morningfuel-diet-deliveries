@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import FilterBar from "@/components/plans/FiltrationBar";
@@ -85,6 +84,8 @@ const Plans = () => {
     search: "",
   });
 
+  const [selectedPlan, setSelectedPlan] = useState<PlanProps | null>(null);
+
   const handleFilterChange = (newFilters: {
     goal: string;
     calorieRange: string;
@@ -93,9 +94,7 @@ const Plans = () => {
     setFilters(newFilters);
   };
 
-  // Filter plans based on current filters
   const filteredPlans = plansData.filter((plan) => {
-    // Filter by goal
     if (filters.goal !== "all") {
       const goalMap: Record<string, string[]> = {
         general: ["Classic Balanced Plan"],
@@ -109,7 +108,6 @@ const Plans = () => {
       }
     }
 
-    // Filter by calorie range
     if (filters.calorieRange !== "all") {
       const calorieRangeMap: Record<string, string[]> = {
         low: ["300-400 calories"],
@@ -121,7 +119,6 @@ const Plans = () => {
       }
     }
 
-    // Filter by search term
     if (filters.search && !plan.title.toLowerCase().includes(filters.search.toLowerCase()) && 
         !plan.description.toLowerCase().includes(filters.search.toLowerCase())) {
       return false;
@@ -129,6 +126,10 @@ const Plans = () => {
 
     return true;
   });
+
+  const handlePlanSelect = (plan: PlanProps) => {
+    setSelectedPlan(plan.title === selectedPlan?.title ? null : plan);
+  };
 
   return (
     <Layout>
@@ -148,7 +149,12 @@ const Plans = () => {
           {filteredPlans.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredPlans.map((plan, index) => (
-                <PlanCard key={index} {...plan} />
+                <PlanCard 
+                  key={index} 
+                  {...plan} 
+                  isSelected={plan.title === selectedPlan?.title}
+                  onSelect={handlePlanSelect}
+                />
               ))}
             </div>
           ) : (

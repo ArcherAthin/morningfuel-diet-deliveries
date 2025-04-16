@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { 
   Card, 
@@ -9,6 +8,7 @@ import {
   CardTitle 
 } from "@/components/ui/card";
 import { Check } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export interface MealDay {
   day: number;
@@ -25,6 +25,11 @@ export interface PlanProps {
   featured?: boolean;
 }
 
+interface ExtendedPlanProps extends PlanProps {
+  isSelected?: boolean;
+  onSelect?: (plan: PlanProps) => void;
+}
+
 const PlanCard = ({ 
   title, 
   description, 
@@ -32,12 +37,27 @@ const PlanCard = ({
   image, 
   price, 
   mealDays,
-  featured = false 
-}: PlanProps) => {
+  featured = false,
+  isSelected = false,
+  onSelect,
+}: ExtendedPlanProps) => {
+  const navigate = useNavigate();
+
+  const handleSubscribe = () => {
+    navigate('/delivery-details', { 
+      state: { plan: { title, description, calories, image, price, mealDays, featured } }
+    });
+  };
+
   return (
-    <Card className={`overflow-hidden h-full flex flex-col ${
-      featured ? 'border-2 border-brand-orange shadow-lg' : 'border border-gray-200'
-    }`}>
+    <Card 
+      className={`overflow-hidden h-full flex flex-col cursor-pointer transition-all duration-200 ${
+        featured ? 'border-2 border-brand-orange shadow-lg' : 'border border-gray-200'
+      } ${
+        isSelected ? 'ring-2 ring-brand-orange ring-offset-2' : ''
+      }`}
+      onClick={() => onSelect?.({ title, description, calories, image, price, mealDays, featured })}
+    >
       {featured && (
         <div className="bg-brand-orange text-white text-center py-2 font-medium text-sm">
           Most Popular
@@ -78,12 +98,16 @@ const PlanCard = ({
       <CardFooter>
         <Button 
           className={`w-full ${
-            featured 
+            isSelected 
               ? 'bg-brand-orange hover:bg-orange-600 text-white' 
               : 'bg-white border border-brand-orange text-brand-orange hover:bg-brand-orange/5'
           }`}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleSubscribe();
+          }}
         >
-          Subscribe Now
+          {isSelected ? 'Continue with Plan' : 'Subscribe Now'}
         </Button>
       </CardFooter>
     </Card>
